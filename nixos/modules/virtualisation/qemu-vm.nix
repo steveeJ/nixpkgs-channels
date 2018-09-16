@@ -31,6 +31,7 @@ let
   startVM =
     ''
       #! ${pkgs.stdenv.shell}
+      set -x
 
       NIX_DISK_IMAGE=$(readlink -f ''${NIX_DISK_IMAGE:-${config.virtualisation.diskImage}})
 
@@ -114,6 +115,7 @@ let
       pkgs.runCommand "nixos-boot-disk"
         { preVM =
             ''
+              set -x
               mkdir $out
               diskImage=$out/disk.img
               bootFlash=$out/bios.bin
