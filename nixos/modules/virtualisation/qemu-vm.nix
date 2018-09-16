@@ -31,6 +31,7 @@ let
   startVM =
     ''
       #! ${pkgs.stdenv.shell}
+      set -x
 
       NIX_DISK_IMAGE=$(readlink -f ''${NIX_DISK_IMAGE:-${config.virtualisation.diskImage}})
 
@@ -114,6 +115,7 @@ let
       pkgs.runCommand "nixos-boot-disk"
         { preVM =
             ''
+              set -x
               mkdir $out
               diskImage=$out/disk.img
               bootFlash=$out/bios.bin
@@ -142,7 +144,6 @@ let
             --hybrid 2 \
             --recompute-chs /dev/vda
           . /sys/class/block/vda2/uevent
-          mknod /dev/vda2 b $MAJOR $MINOR
           . /sys/class/block/vda/uevent
           ${pkgs.dosfstools}/bin/mkfs.fat -F16 /dev/vda2
           export MTOOLS_SKIP_CHECK=1
@@ -482,7 +483,7 @@ in
           };
       } // optionalAttrs cfg.useBootLoader
       { "/boot" =
-          { device = "/dev/vdb2";
+          { device = "/dev/sda2";
             fsType = "vfat";
             options = [ "ro" ];
             noCheck = true; # fsck fails on a r/o filesystem

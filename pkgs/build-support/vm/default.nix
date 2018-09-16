@@ -153,6 +153,7 @@ rec {
 
   stage2Init = writeScript "vm-run-stage2" ''
     #! ${bash}/bin/sh
+    set -x
     source /tmp/xchg/saved-env
 
     # Set the system time from the hardware clock.  Works around an
